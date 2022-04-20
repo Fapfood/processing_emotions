@@ -35,7 +35,7 @@ void setup () {
   banner = loadImage("data/baner.jpg");
   Font1 = createFont("Arial Bold", 26);
   Font2 = createFont("Arial", 10);
-  anger = minim.loadFile("data/anger.wav");
+  anger = minim.loadFile("data/anger.wav"); // ladowanie dzwięków
   disgust = minim.loadFile("data/disgust.wav");
   fear = minim.loadFile("data/fear.wav");
   happiness = minim.loadFile("data/happiness.wav");
@@ -44,7 +44,7 @@ void setup () {
   surprise = minim.loadFile("data/surprise.wav");
 
   nya = new MultiMarker(this, width, height, "data/camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
-  nya.addARMarker("data/31.patt", 80);
+  nya.addARMarker("data/31.patt", 80); //dodanie znaczników do zmiennej
   nya.addARMarker("data/37.patt", 80);
   nya.addARMarker("data/47.patt", 80);
   nya.addARMarker("data/89.patt", 80);
@@ -61,7 +61,7 @@ void setup () {
 
 void draw() {
   
-  model3D = loadImage("unknown.png");
+  model3D = loadImage("unknown.png"); // ladowanie "defoltowego" wyrazu twarzy
   
   if (flag == 0) {
     background(#FFFFFF);
@@ -162,21 +162,21 @@ void draw() {
           circle(points.get(16).getX(), points.get(16).getY() + 52, 10);
         }
 
-        if (Config.useImage()) {
-          if (emotion == "fear"){  model3D = loadImage("fear.png");} //  sprawdzamy emocję i ladujemy odpowiedni model do zmiennej
+        if (Config.useImage()) { // sprawdzanie czy jesz włączony przycisk "image"
+          if (emotion == "fear"){  model3D = loadImage("fear.png");} //  sprawdzamy emocję i ladujemy odpowiedni obrazek do zmiennej
           if (emotion == "surprise"){  model3D = loadImage("surprised.png");}
           if (emotion == "disgust"){  model3D = loadImage("disgused.png");}
           if (emotion == "anger"){  model3D = loadImage("angry.png");}
           if (emotion == "sadness"){  model3D = loadImage("sad.png");}
           if (emotion == "unknown"){  model3D = loadImage("unknown.png");}
           if (emotion == "happiness"){  model3D = loadImage("happy.png");}
-          image(model3D, faces[i].x+faces[i].width/4, faces[i].y-faces[i].height/3, faces[i].width/2, faces[i].width/2);
+          image(model3D, faces[i].x+faces[i].width/4, faces[i].y-faces[i].height/3, faces[i].width/2, faces[i].width/2); // na koordynaty rozpoznawania twarzy opencv ladujemy obrazek emoji 
         }
       }
 
       if (Config.useData()) {
         noFill();
-        rect(faces[i].x, faces[i].y + 52, faces[i].width, faces[i].height);
+        rect(faces[i].x, faces[i].y + 52, faces[i].width, faces[i].height); // zielona zama razpoznawania twarzy
       }
     }
   }

@@ -104,12 +104,19 @@ void draw() {
           happiness.rewind();
           happiness.play();
         }
+        
+        if (Config.useText()) {
+          textSize(40);
+          fill(204, 102, 0);
+          text(emotion, faces[i].x, faces[i].y + 52 + faces[i].height);
+        }
 
         if (Config.useData()) {
-          circle(points.get(30).getX(), points.get(30).getY(), 10);
-          circle(points.get(0).getX(), points.get(0).getY(), 10);
-          circle(points.get(8).getX(), points.get(8).getY(), 10);
-          circle(points.get(16).getX(), points.get(16).getY(), 10);
+          noFill();
+          circle(points.get(30).getX(), points.get(30).getY() + 52, 10);
+          circle(points.get(0).getX(), points.get(0).getY() + 52, 10);
+          circle(points.get(8).getX(), points.get(8).getY() + 52, 10);
+          circle(points.get(16).getX(), points.get(16).getY() + 52, 10);
         }
 
         if (Config.useImage()) {
@@ -123,10 +130,11 @@ void draw() {
         }
       }
       if (Config.useData()) {
-        rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+        noFill();
+        rect(faces[i].x, faces[i].y + 52, faces[i].width, faces[i].height);
       }
 
-      shape(model3D, faces[i].x+faces[i].width/2, faces[i].y-faces[i].height/2);
+      //shape(model3D, faces[i].x+faces[i].width/2, faces[i].y-faces[i].height/2);
     }
 
     //set(0, 52, cam);

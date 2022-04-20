@@ -19,9 +19,10 @@ OpenCV opencv;
 List<FaceTracker> trackers;
 int timer = 0;
 
+PShape model3D; // zmienna dla 3d modelu
 
 void setup () {
-  size(640, 480);
+  size(640, 480, P3D); // zmieniamy przestrzeń na 3D
   background(#FFFFFF);
 
   cam = new Capture(this, 640, 480, "pipeline:autovideosrc");
@@ -97,8 +98,18 @@ void draw() {
         circle(points.get(0).getX(), points.get(0).getY(), 10);
         circle(points.get(8).getX(), points.get(8).getY(), 10);
         circle(points.get(16).getX(), points.get(16).getY(), 10);
+        
+        if (emotion == "fear"){  model3D = loadShape("fear.obj");} //  sprawdzamy emocję i ladujemy odpowiedni model do zmiennej 
+        if (emotion == "surprise"){  model3D = loadShape("surprised.obj");}
+        if (emotion == "disgust"){  model3D = loadShape("disgused.obj");}
+        if (emotion == "anger"){  model3D = loadShape("angry.obj");}
+        if (emotion == "sadness"){  model3D = loadShape("sad.obj");}
+        if (emotion == "unknown"){  model3D = loadShape("unknown.obj");}
+        if (emotion == "happiness"){  model3D = loadShape("happy.obj");}
       }
-      rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+        
+      //rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+      shape(model3D, faces[i].x+faces[i].width/2, faces[i].y-faces[i].height/2);
     }
     
     //set(0, 62, cam);

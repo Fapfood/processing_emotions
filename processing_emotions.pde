@@ -110,37 +110,37 @@ void draw() {
           if (musicTimer < millis()) {
             musicTimer = millis() + 1500;
 
-            if (emotion == "anger") {  
+            if (emotion == "anger") {
               anger.play();
               anger.rewind();
               anger.play();
             }
-            if (emotion == "surprise") {  
+            if (emotion == "surprise") {
               surprise.play();
               surprise.rewind();
               surprise.play();
             }
-            if (emotion == "disgust") {  
+            if (emotion == "disgust") {
               disgust.play();
               disgust.rewind();
               disgust.play();
             }
-            if (emotion == "anger") {  
+            if (emotion == "anger") {
               anger.play();
               anger.rewind();
               anger.play();
             }
-            if (emotion == "sadness"){  
-              anger.play();
-              anger.rewind();
-              anger.play();
+            if (emotion == "sadness"){
+              sadness.play();
+              sadness.rewind();
+              sadness.play();
             }
-            if (emotion == "unknown"){  
+            if (emotion == "unknown"){
               neutral.play();
               neutral.rewind();
               neutral.play();
             }
-            if (emotion == "happiness"){  
+            if (emotion == "happiness"){
               happiness.play();
               happiness.rewind();
               happiness.play();
@@ -176,7 +176,7 @@ void draw() {
 
       if (Config.useData()) {
         noFill();
-        rect(faces[i].x, faces[i].y + 52, faces[i].width, faces[i].height);   
+        rect(faces[i].x, faces[i].y + 52, faces[i].width, faces[i].height);
       }
     }
   }
@@ -362,7 +362,7 @@ void process(PImage img, Rectangle[] faces) {
     PImage part = createImage(img.width, img.height, ARGB);
     copy(img, part, x, y, w, h);
     FaceTracker fc = trackers.get(i);
-    fc.track(part, Config.useData());
+    fc.track(part, true);
     part = fc.outImg;
     copy(part, img, x, y, w, h);
   }

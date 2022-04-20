@@ -18,11 +18,12 @@ MultiMarker nya;
 OpenCV opencv;
 List<FaceTracker> trackers;
 int timer = 0;
+int musicTimer = 0;
 
 PImage model3D; // zmienna dla obraza
 
 void setup () {
-  size(640, 480);
+  size(640, 532);
   background(#FFFFFF);
 
   cam = new Capture(this, 640, 480, "pipeline:autovideosrc");
@@ -106,43 +107,47 @@ void draw() {
         String emotion = trackers.get(i).classifier.currentEmotion;
 
         if (Config.useAudio()) {
-          if (emotion == "anger"){  
-          anger.play();
-          anger.rewind();
-          anger.play();
+          if (musicTimer < millis()) {
+            musicTimer = millis() + 1500;
+
+            if (emotion == "anger") {  
+              anger.play();
+              anger.rewind();
+              anger.play();
+            }
+            if (emotion == "surprise") {  
+              surprise.play();
+              surprise.rewind();
+              surprise.play();
+            }
+            if (emotion == "disgust") {  
+              disgust.play();
+              disgust.rewind();
+              disgust.play();
+            }
+            if (emotion == "anger") {  
+              anger.play();
+              anger.rewind();
+              anger.play();
+            }
+            if (emotion == "sadness"){  
+              anger.play();
+              anger.rewind();
+              anger.play();
+            }
+            if (emotion == "unknown"){  
+              neutral.play();
+              neutral.rewind();
+              neutral.play();
+            }
+            if (emotion == "happiness"){  
+              happiness.play();
+              happiness.rewind();
+              happiness.play();
+            }
+          }
         }
-        if (emotion == "surprise"){  
-          surprise.play();
-          surprise.rewind();
-          surprise.play();
-        }
-        if (emotion == "disgust"){  
-          disgust.play();
-          disgust.rewind();
-          disgust.play();
-        }
-        if (emotion == "anger"){  
-          anger.play();
-          anger.rewind();
-          anger.play();
-        }
-         if (emotion == "sadness"){  
-          anger.play();
-          anger.rewind();
-          anger.play();
-         }
-         if (emotion == "unknown"){  
-          neutral.play();
-          neutral.rewind();
-          neutral.play();
-         }
-         if (emotion == "happiness"){  
-          happiness.play();
-          happiness.rewind();
-          happiness.play();
-         }
-        }
-        
+
         if (Config.useText()) {
           textSize(40);
           fill(204, 102, 0);
@@ -166,18 +171,14 @@ void draw() {
           if (emotion == "unknown"){  model3D = loadImage("unknown.png");}
           if (emotion == "happiness"){  model3D = loadImage("happy.png");}
           image(model3D, faces[i].x+faces[i].width/4, faces[i].y-faces[i].height/3, faces[i].width/2, faces[i].width/2);
+        }
       }
-      }
+
       if (Config.useData()) {
         noFill();
-        rect(faces[i].x, faces[i].y + 52, faces[i].width, faces[i].height);
-        
+        rect(faces[i].x, faces[i].y + 52, faces[i].width, faces[i].height);   
+      }
     }
-
-      
-    }
-
-    //set(0, 52, cam);
   }
 }
 
@@ -361,7 +362,7 @@ void process(PImage img, Rectangle[] faces) {
     PImage part = createImage(img.width, img.height, ARGB);
     copy(img, part, x, y, w, h);
     FaceTracker fc = trackers.get(i);
-    fc.track(part, true);
+    fc.track(part, Config.useData());
     part = fc.outImg;
     copy(part, img, x, y, w, h);
   }

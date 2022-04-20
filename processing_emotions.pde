@@ -32,8 +32,8 @@ void setup () {
   minim = new Minim(this);
 
   banner = loadImage("data/baner.jpg");
-  Font1 = createFont("Arial Bold", 54);
-  Font2 = createFont("Arial", 18);
+  Font1 = createFont("Arial Bold", 26);
+  Font2 = createFont("Arial", 10);
   pain = minim.loadFile("data/pain.wav");
   happiness = minim.loadFile("data/happiness.wav");
   sadness = minim.loadFile("data/sadness.wav");
@@ -88,7 +88,7 @@ void draw() {
 
     nya.detect(img);
     checkMarkers();
-    image(img, 0, 62);
+    image(img, 0, 52);
 
     noFill();
     stroke(0, 255, 0);
@@ -129,49 +129,49 @@ void draw() {
       shape(model3D, faces[i].x+faces[i].width/2, faces[i].y-faces[i].height/2);
     }
 
-    //set(0, 62, cam);
+    //set(0, 52, cam);
   }
 }
 
 //GUI, start page 
 void landing_page () {
-  image(banner, 650, 120, 487, 487);
+  image(banner, 0.507*width, 110, 253, 253);
   textFont(Font1);
-  textSize(54);
+  //textSize(54);
   fill(#212121);
-  textLeading(64);
-  text("Facial Emotion Recognition", 142, 200, 488, 140);
+  textLeading(32);
+  text("Facial Emotion Recognition", 0.097*width, 160, 253, 62);
   textFont(Font2);
-  textSize(18);
+  //textSize(18);
   fill(#616161);
-  textLeading(26);
-  text("Easy and simple detection of human feelings at a specific moment.", 142, 360, 340, 50);
+  textLeading(16);
+  text("Easy and simple detection of human feelings at a specific moment.", 0.097*width, 232, 200, 50);
 }
 
 // buttons for GUI from G4P library
 public void createGUI() {
-  start = new GButton(this, 142, 470, 213, 56, "START");
-  start.setFont(new Font("Arial", Font.BOLD, 16));
+  start = new GButton(this, 0.097*width, 290, 90, 30, "START");
+  start.setFont(new Font("Arial", Font.BOLD, 10));
   start.addEventHandler(this, "buttonClick");
 
-  home = new GButton(this, 40, 20, 80, 22, "Home");
-  home.setFont(new Font("Arial", Font.BOLD, 18));
+  home = new GButton(this, 0.031*width, 20, 41, 14, "Home");
+  home.setFont(new Font("Arial", Font.BOLD, 12));
   home.addEventHandler(this, "homeClick");
 
-  audio = new GButton(this, 420, 20, 80, 22, "Audio");
-  audio.setFont(new Font("Arial", Font.BOLD, 18));
+  audio = new GButton(this, 0.325*width, 20, 41, 14, "Audio");
+  audio.setFont(new Font("Arial", Font.BOLD, 12));
   audio.addEventHandler(this, "audioClick");
 
-  text = new GButton(this, 540, 20, 80, 22, "Text");
-  text.setFont(new Font("Arial", Font.BOLD, 18));
+  text = new GButton(this, 0.421*width, 20, 41, 14, "Text");
+  text.setFont(new Font("Arial", Font.BOLD, 12));
   text.addEventHandler(this, "textClick");
 
-  image = new GButton(this, 660, 20, 80, 22, "Image");
-  image.setFont(new Font("Arial", Font.BOLD, 18));
+  image = new GButton(this, 0.515*width, 20, 42, 14, "Image");
+  image.setFont(new Font("Arial", Font.BOLD, 12));
   image.addEventHandler(this, "imageClick");
 
-  data = new GButton(this, 780, 20, 80, 22, "Data");
-  data.setFont(new Font("Arial", Font.BOLD, 18));
+  data = new GButton(this, 0.61*width, 20, 41, 14, "Data");
+  data.setFont(new Font("Arial", Font.BOLD, 12));
   data.addEventHandler(this, "dataClick");
 }
 

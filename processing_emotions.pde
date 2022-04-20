@@ -2,6 +2,7 @@ import ddf.minim.*;
 import g4p_controls.*; // GUI, buttons etc.
 import processing.video.*; // camera
 import java.awt.Font; // Custom GUI
+import jp.nyatla.nyar4psg.*; // import biblioteki nyar4psg, umożliwia odczyt znaczników
 
 
 Minim minim;
@@ -11,6 +12,7 @@ int flag = 0; // change screens
 PImage banner; 
 GButton start, home, audio, text, image, data;
 PFont Font1, Font2;
+MultiMarker nya;
 
 
 void setup () {
@@ -18,16 +20,22 @@ void setup () {
   background(#FFFFFF);
   Font1 = createFont("Arial Bold", 54);
   Font2 = createFont("Arial", 18);
-  cam=new Capture(this, 1280, 720, "pipeline:autovideosrc"); // przypisanie rozdzielczości kamery
+  cam = new Capture(this, 1280, 720, "pipeline:autovideosrc"); // przypisanie rozdzielczości kamery
   cam.start();
-  banner = loadImage("baner.jpg");
+  banner = loadImage("data/baner.jpg");
   createGUI();
   customGUI();
   minim = new Minim(this);
-  pain = minim.loadFile("pain.wav");
-  happiness = minim.loadFile("happiness.wav");
-  sadness = minim.loadFile("sadness.wav");
-  fear = minim.loadFile("fear.wav");
+  pain = minim.loadFile("data/pain.wav");
+  happiness = minim.loadFile("data/happiness.wav");
+  sadness = minim.loadFile("data/sadness.wav");
+  fear = minim.loadFile("data/fear.wav");
+
+  nya = new MultiMarker(this, width, height, "data/camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
+  nya.addARMarker("data/31.patt", 80);
+  nya.addARMarker("data/37.patt", 80);
+  nya.addARMarker("data/47.patt", 80);
+  nya.addARMarker("data/89.patt", 80);
 }
 
 void draw() {
@@ -152,23 +160,50 @@ public void audioClick(GButton button, GEvent event) {
     happiness.play();
     happiness.rewind();
     happiness.play();
+    Config.toogleAudioButton();
   }
 }
 
 public void textClick(GButton button, GEvent event) {
   if (button == text && event == GEvent.CLICKED) {
     // name of emotions clos to head
+    Config.toogleTextButton();
   }
 }
 
 public void imageClick(GButton button, GEvent event) {
   if (button == image && event == GEvent.CLICKED) {
     // 3d shape on head
+    Config.toogleImageButton();
   }
 }
 
 public void dataClick(GButton button, GEvent event) {
   if (button == data && event == GEvent.CLICKED) {
     // show frame and points around head
+    Config.toogleDataButton();
+  }
+}
+
+public void checkMarkers() {
+  if (nya.isExist(0)) { 
+    Config.audioMarker = true;
+  } else {
+    Config.audioMarker = false;
+  }
+  if (nya.isExist(1)) { 
+    Config.textMarker = true;
+  } else {
+    Config.textMarker = false;
+  }
+  if (nya.isExist(2)) { 
+    Config.imageMarker = true;
+  } else {
+    Config.imageMarker = false;
+  }
+  if (nya.isExist(3)) { 
+    Config.dataMarker = true;
+  } else {
+    Config.dataMarker = false;
   }
 }

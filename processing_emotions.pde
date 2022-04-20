@@ -1,8 +1,10 @@
 import ddf.minim.*;
 import g4p_controls.*; // GUI, buttons etc.
 import processing.video.*; // camera
-import java.awt.Font; // Custom GUI
 import jp.nyatla.nyar4psg.*; // import biblioteki nyar4psg, umożliwia odczyt znaczników
+import gab.opencv.*;
+import processing.video.*;
+import java.awt.*;
 
 
 Minim minim;
@@ -13,19 +15,24 @@ PImage banner;
 GButton start, home, audio, text, image, data;
 PFont Font1, Font2;
 MultiMarker nya;
+OpenCV opencv;
+List<FaceTracker> trackers;
+int timer = 0;
 
 
 void setup () {
-  size(1280, 720);
+  size(640, 480);
   background(#FFFFFF);
+
+  cam = new Capture(this, 640, 480, "pipeline:autovideosrc");
+  opencv = new OpenCV(this, 640, 480);
+  opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
+  cam.start();
+  minim = new Minim(this);
+
+  banner = loadImage("data/baner.jpg");
   Font1 = createFont("Arial Bold", 54);
   Font2 = createFont("Arial", 18);
-  cam = new Capture(this, 1280, 720, "pipeline:autovideosrc"); // przypisanie rozdzielczości kamery
-  cam.start();
-  banner = loadImage("data/baner.jpg");
-  createGUI();
-  customGUI();
-  minim = new Minim(this);
   pain = minim.loadFile("data/pain.wav");
   happiness = minim.loadFile("data/happiness.wav");
   sadness = minim.loadFile("data/sadness.wav");
@@ -36,6 +43,15 @@ void setup () {
   nya.addARMarker("data/37.patt", 80);
   nya.addARMarker("data/47.patt", 80);
   nya.addARMarker("data/89.patt", 80);
+
+  trackers = new ArrayList<FaceTracker>();
+  for (int i = 0; i < 10; i++) {
+    FaceTracker tracker = new FaceTracker();
+    trackers.add(tracker);
+  }
+
+  createGUI();
+  customGUI();
 }
 
 void draw() {
@@ -57,7 +73,35 @@ void draw() {
     image.setVisible(true);
     data.setVisible(true);
     cam.read();
-    set(0, 62, cam);
+    
+    PImage img = create(cam);
+    Rectangle[] faces;
+    opencv.loadImage(img);
+    faces = opencv.detect();
+  
+    if (timer < millis()) {
+      timer += 250;
+      println(faces.length);
+      process(img, faces);
+    }
+    image(img, 0, 62);
+    noFill();
+    stroke(0, 255, 0);
+    strokeWeight(3);
+  
+    for (int i = 0; i < faces.length; i++) {
+      List<Point2d> points = trackers.get(i).points;
+      if (points != null) {
+        String emotion = trackers.get(i).classifier.currentEmotion;
+        circle(points.get(30).getX(), points.get(30).getY(), 10);
+        circle(points.get(0).getX(), points.get(0).getY(), 10);
+        circle(points.get(8).getX(), points.get(8).getY(), 10);
+        circle(points.get(16).getX(), points.get(16).getY(), 10);
+      }
+      rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+    }
+    
+    //set(0, 62, cam);
   }
 }
 
@@ -205,5 +249,47 @@ public void checkMarkers() {
     Config.dataMarker = true;
   } else {
     Config.dataMarker = false;
+  }
+}
+
+PImage create(Capture cam) {
+  PImage res = createImage(cam.width, cam.height, ARGB);
+  res.copy(cam, 0, 0, cam.width, cam.height, 0, 0, cam.width, cam.height);
+  return res;
+}
+
+void copy(PImage from, PImage to, int x, int y, int width, int height) {
+  to.copy(from, x, y, width, height, x, y, width, height);
+}
+
+void process(PImage img, Rectangle[] faces) {
+  int border_width = img.width / 20;
+  int border_height = img.height / 20;
+  for (int i = 0; i < faces.length; i++) {
+    int x = faces[i].x - border_width;
+    int y = faces[i].y - border_height;
+    int w = faces[i].width + 2 * border_width;
+    int h = faces[i].height + 2 * border_height;
+    if (x < 0) {
+      w += x; // zmniejszamy w bo x ujemne
+      x = 0;
+    }
+    if (y < 0) {
+      h += y; // zmniejszamy h bo x ujemne
+      y = 0;
+    }
+    if (x + w > img.width) {
+      w = img.width - x;
+    }
+    if (y + h > img.height) {
+      h = img.height - y;
+    }
+
+    PImage part = createImage(img.width, img.height, ARGB);
+    copy(img, part, x, y, w, h);
+    FaceTracker fc = trackers.get(i);
+    fc.track(part, true);
+    part = fc.outImg;
+    copy(part, img, x, y, w, h);
   }
 }

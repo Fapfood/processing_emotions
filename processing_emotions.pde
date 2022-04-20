@@ -19,7 +19,7 @@ OpenCV opencv;
 List<FaceTracker> trackers;
 int timer = 0;
 
-PShape model3D; // zmienna dla 3d modelu
+PImage model3D; // zmienna dla obraza
 
 void setup () {
   size(640, 480);
@@ -56,6 +56,9 @@ void setup () {
 }
 
 void draw() {
+  
+  model3D = loadImage("unknown.png");
+  
   if (flag == 0) {
     background(#FFFFFF);
     landing_page();
@@ -120,21 +123,23 @@ void draw() {
         }
 
         if (Config.useImage()) {
-          if (emotion == "fear"){  model3D = loadShape("fear.obj");} //  sprawdzamy emocję i ladujemy odpowiedni model do zmiennej
-          if (emotion == "surprise"){  model3D = loadShape("surprised.obj");}
-          if (emotion == "disgust"){  model3D = loadShape("disgused.obj");}
-          if (emotion == "anger"){  model3D = loadShape("angry.obj");}
-          if (emotion == "sadness"){  model3D = loadShape("sad.obj");}
-          if (emotion == "unknown"){  model3D = loadShape("unknown.obj");}
-          if (emotion == "happiness"){  model3D = loadShape("happy.obj");}
-        }
+          if (emotion == "fear"){  model3D = loadImage("fear.png");} //  sprawdzamy emocję i ladujemy odpowiedni model do zmiennej
+          if (emotion == "surprise"){  model3D = loadImage("surprised.png");}
+          if (emotion == "disgust"){  model3D = loadImage("disgused.png");}
+          if (emotion == "anger"){  model3D = loadImage("angry.png");}
+          if (emotion == "sadness"){  model3D = loadImage("sad.png");}
+          if (emotion == "unknown"){  model3D = loadImage("unknown.png");}
+          if (emotion == "happiness"){  model3D = loadImage("happy.png");}
+          image(model3D, faces[i].x+faces[i].width/4, faces[i].y-faces[i].height/3, faces[i].width/2, faces[i].width/2);
+      }
       }
       if (Config.useData()) {
         noFill();
         rect(faces[i].x, faces[i].y + 52, faces[i].width, faces[i].height);
-      }
+        
+    }
 
-      //shape(model3D, faces[i].x+faces[i].width/2, faces[i].y-faces[i].height/2);
+      
     }
 
     //set(0, 52, cam);

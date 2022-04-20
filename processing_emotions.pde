@@ -22,7 +22,7 @@ int timer = 0;
 PShape model3D; // zmienna dla 3d modelu
 
 void setup () {
-  size(640, 480, P3D); // zmieniamy przestrzeń na 3D
+  size(640, 480);
   background(#FFFFFF);
 
   cam = new Capture(this, 640, 480, "pipeline:autovideosrc");
@@ -74,44 +74,61 @@ void draw() {
     image.setVisible(true);
     data.setVisible(true);
     cam.read();
-    
+
     PImage img = create(cam);
     Rectangle[] faces;
     opencv.loadImage(img);
     faces = opencv.detect();
-  
+
     if (timer < millis()) {
       timer += 250;
       println(faces.length);
       process(img, faces);
     }
+
+    nya.detect(img);
+    checkMarkers();
     image(img, 0, 62);
+
     noFill();
     stroke(0, 255, 0);
     strokeWeight(3);
-  
+
     for (int i = 0; i < faces.length; i++) {
       List<Point2d> points = trackers.get(i).points;
       if (points != null) {
         String emotion = trackers.get(i).classifier.currentEmotion;
-        circle(points.get(30).getX(), points.get(30).getY(), 10);
-        circle(points.get(0).getX(), points.get(0).getY(), 10);
-        circle(points.get(8).getX(), points.get(8).getY(), 10);
-        circle(points.get(16).getX(), points.get(16).getY(), 10);
-        
-        if (emotion == "fear"){  model3D = loadShape("fear.obj");} //  sprawdzamy emocję i ladujemy odpowiedni model do zmiennej 
-        if (emotion == "surprise"){  model3D = loadShape("surprised.obj");}
-        if (emotion == "disgust"){  model3D = loadShape("disgused.obj");}
-        if (emotion == "anger"){  model3D = loadShape("angry.obj");}
-        if (emotion == "sadness"){  model3D = loadShape("sad.obj");}
-        if (emotion == "unknown"){  model3D = loadShape("unknown.obj");}
-        if (emotion == "happiness"){  model3D = loadShape("happy.obj");}
+
+        if (Config.useAudio()) {
+          happiness.play();
+          happiness.rewind();
+          happiness.play();
+        }
+
+        if (Config.useData()) {
+          circle(points.get(30).getX(), points.get(30).getY(), 10);
+          circle(points.get(0).getX(), points.get(0).getY(), 10);
+          circle(points.get(8).getX(), points.get(8).getY(), 10);
+          circle(points.get(16).getX(), points.get(16).getY(), 10);
+        }
+
+        if (Config.useImage()) {
+          if (emotion == "fear"){  model3D = loadShape("fear.obj");} //  sprawdzamy emocję i ladujemy odpowiedni model do zmiennej
+          if (emotion == "surprise"){  model3D = loadShape("surprised.obj");}
+          if (emotion == "disgust"){  model3D = loadShape("disgused.obj");}
+          if (emotion == "anger"){  model3D = loadShape("angry.obj");}
+          if (emotion == "sadness"){  model3D = loadShape("sad.obj");}
+          if (emotion == "unknown"){  model3D = loadShape("unknown.obj");}
+          if (emotion == "happiness"){  model3D = loadShape("happy.obj");}
+        }
       }
-        
-      //rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+      if (Config.useData()) {
+        rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+      }
+
       shape(model3D, faces[i].x+faces[i].width/2, faces[i].y-faces[i].height/2);
     }
-    
+
     //set(0, 62, cam);
   }
 }
@@ -212,9 +229,6 @@ public void homeClick(GButton button, GEvent event) {
 
 public void audioClick(GButton button, GEvent event) {
   if (button == audio && event == GEvent.CLICKED) {
-    happiness.play();
-    happiness.rewind();
-    happiness.play();
     Config.toogleAudioButton();
   }
 }
@@ -241,22 +255,22 @@ public void dataClick(GButton button, GEvent event) {
 }
 
 public void checkMarkers() {
-  if (nya.isExist(0)) { 
+  if (nya.isExist(0)) {
     Config.audioMarker = true;
   } else {
     Config.audioMarker = false;
   }
-  if (nya.isExist(1)) { 
+  if (nya.isExist(1)) {
     Config.textMarker = true;
   } else {
     Config.textMarker = false;
   }
-  if (nya.isExist(2)) { 
+  if (nya.isExist(2)) {
     Config.imageMarker = true;
   } else {
     Config.imageMarker = false;
   }
-  if (nya.isExist(3)) { 
+  if (nya.isExist(3)) {
     Config.dataMarker = true;
   } else {
     Config.dataMarker = false;

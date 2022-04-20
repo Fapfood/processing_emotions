@@ -127,9 +127,9 @@ void draw() {
           anger.play();
         }
          if (emotion == "sadness"){  
-          anger.play();
-          anger.rewind();
-          anger.play();
+          sadness.play();
+          sadness.rewind();
+          sadness.play();
          }
          if (emotion == "unknown"){  
           neutral.play();

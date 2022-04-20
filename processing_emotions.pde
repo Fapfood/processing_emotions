@@ -8,7 +8,7 @@ import java.awt.*;
 
 
 Minim minim;
-AudioPlayer fear, happiness, pain, sadness;
+AudioPlayer anger, disgust, fear, happiness, neutral, sadness, surprise;
 Capture cam; // camera
 int flag = 0; // change screens
 PImage banner; 
@@ -34,10 +34,13 @@ void setup () {
   banner = loadImage("data/baner.jpg");
   Font1 = createFont("Arial Bold", 26);
   Font2 = createFont("Arial", 10);
-  pain = minim.loadFile("data/pain.wav");
-  happiness = minim.loadFile("data/happiness.wav");
-  sadness = minim.loadFile("data/sadness.wav");
+  anger = minim.loadFile("data/anger.wav");
+  disgust = minim.loadFile("data/disgust.wav");
   fear = minim.loadFile("data/fear.wav");
+  happiness = minim.loadFile("data/happiness.wav");
+  neutral = minim.loadFile("data/neutral.wav");
+  sadness = minim.loadFile("data/sadness.wav");
+  surprise = minim.loadFile("data/surprise.wav");
 
   nya = new MultiMarker(this, width, height, "data/camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
   nya.addARMarker("data/31.patt", 80);
@@ -103,9 +106,41 @@ void draw() {
         String emotion = trackers.get(i).classifier.currentEmotion;
 
         if (Config.useAudio()) {
+          if (emotion == "anger"){  
+          anger.play();
+          anger.rewind();
+          anger.play();
+        }
+        if (emotion == "surprise"){  
+          surprise.play();
+          surprise.rewind();
+          surprise.play();
+        }
+        if (emotion == "disgust"){  
+          disgust.play();
+          disgust.rewind();
+          disgust.play();
+        }
+        if (emotion == "anger"){  
+          anger.play();
+          anger.rewind();
+          anger.play();
+        }
+         if (emotion == "sadness"){  
+          anger.play();
+          anger.rewind();
+          anger.play();
+         }
+         if (emotion == "unknown"){  
+          neutral.play();
+          neutral.rewind();
+          neutral.play();
+         }
+         if (emotion == "happiness"){  
           happiness.play();
           happiness.rewind();
           happiness.play();
+         }
         }
         
         if (Config.useText()) {

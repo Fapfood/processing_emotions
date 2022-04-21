@@ -12,7 +12,7 @@ static class Config {
   }
 
   public static boolean useAudio() {
-    return audioButton ^ audioMarker;
+    return audioButton ^ audioMarker; // XOR zeby uzgledniac oba zrodla
   }
 
   public static boolean useText() {

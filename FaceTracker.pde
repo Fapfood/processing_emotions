@@ -35,13 +35,13 @@ class FaceTracker {
     this.tracker.reset();
     this.tracker.track(frame);
 
-    if(this.tracker.getTrackedFaces().size() > 0) {
+    if(this.tracker.getTrackedFaces().size() > 0) { // jesli znajdzie twarz
       this.face = this.tracker.getTrackedFaces().get(0);
       this.points = this.createPoints(this.face, this.tracker.scale);
       this.triangles = this.tracker.getTriangles(this.face);
       if (draw) {this.drawModel(frame, this.face);}
       this.classifier.classify(this.points);
-    } else {
+    } else { // jesli nie znajdzie twarzy
       this.face = null;
       this.points = null;
       this.triangles = null;
@@ -60,19 +60,19 @@ class FaceTracker {
       this.tracker.getBoundingBoxColour(), this.tracker.getMeshColour(), this.tracker.getConnectionColour(), this.tracker.getPointColour());
   }
 
-  private MBFImage convert(PImage img) {
+  private MBFImage convert(PImage img) { // conwersja z processing na openimaj
     img.loadPixels();
     return new MBFImage(img.pixels, img.width, img.height);
   }
 
-  private PImage convert(MBFImage img) {
+  private PImage convert(MBFImage img) { // conwersja z openiaj na processing
     PImage res = createImage(img.getWidth(), img.getHeight(), ARGB);
     res.pixels = img.toPackedARGBPixels();
     res.updatePixels();
     return res;
   }
 
-  private List<Point2d> createPoints(MultiTracker.TrackedFace f, float scale) {
+  private List<Point2d> createPoints(MultiTracker.TrackedFace f, float scale) { // pozyskiwanie punktow z macierzy
     final int n = f.shape.getRowDimension() / 2;
     final List<Point2d> ps = new ArrayList<Point2d>();
     for (int i = 0; i < n; i++) {

@@ -23,14 +23,14 @@ int musicTimer = 0;
 PImage model3D; // zmienna dla obraza
 
 void setup () {
-  size(640, 532);
+  size(640, 532); // zwiekszenie rozmiaru o rozmiar gui
   background(#FFFFFF);
 
   cam = new Capture(this, 640, 480, "pipeline:autovideosrc");
   opencv = new OpenCV(this, 640, 480);
   opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
   cam.start();
-  minim = new Minim(this);
+  minim = new Minim(this); // do dzwiekow
 
   banner = loadImage("data/baner.jpg");
   Font1 = createFont("Arial Bold", 26);
@@ -50,8 +50,8 @@ void setup () {
   nya.addARMarker("data/89.patt", 80);
 
   trackers = new ArrayList<FaceTracker>();
-  for (int i = 0; i < 10; i++) {
-    FaceTracker tracker = new FaceTracker();
+  for (int i = 0; i < 10; i++) { // maks 10 twarzy
+    FaceTracker tracker = new FaceTracker(); // oszczedzanie czasu na inicjalizacje trackerow
     trackers.add(tracker);
   }
 
@@ -63,7 +63,7 @@ void draw() {
   
   model3D = loadImage("unknown.png"); // ladowanie "defoltowego" wyrazu twarzy
   
-  if (flag == 0) {
+  if (flag == 0) { // ekran poczatkowy
     background(#FFFFFF);
     landing_page();
     start.setVisible(true);
@@ -72,7 +72,7 @@ void draw() {
     text.setVisible(false);
     image.setVisible(false);
     data.setVisible(false);
-  } else if (flag == 1 && cam.available() == true) {
+  } else if (flag == 1 && cam.available() == true) { // dzialajacy program
     background(#FFFFFF);
     start.setVisible(false);
     home.setVisible(true);
@@ -85,16 +85,16 @@ void draw() {
     PImage img = create(cam);
     Rectangle[] faces;
     opencv.loadImage(img);
-    faces = opencv.detect();
+    faces = opencv.detect(); // twarze z openCV
 
-    if (timer < millis()) {
+    if (timer < millis()) { // trackowanie co 1/4 sekundy
       timer += 250;
       println(faces.length);
-      process(img, faces);
+      process(img, faces); // rozpoznawanie punktow szczegolowych i rozpoznawanie emocji
     }
 
-    nya.detect(img);
-    checkMarkers();
+    nya.detect(img); // rozpoznawanie znacznikow
+    checkMarkers(); // zmienianie configu na podstawie znacznikow
     image(img, 0, 52);
 
     noFill();
@@ -103,10 +103,10 @@ void draw() {
 
     for (int i = 0; i < faces.length; i++) {
       List<Point2d> points = trackers.get(i).points;
-      if (points != null) {
+      if (points != null) { // jesli openimaj znajdzie twarz, czasem nie znajduje, wtedy nie znamy emocji
         String emotion = trackers.get(i).classifier.currentEmotion;
 
-        if (Config.useAudio()) {
+        if (Config.useAudio()) { // rozne dzialania na emocji i zalezne od configu
           if (musicTimer < millis()) {
             musicTimer = millis() + 1500;
 
@@ -278,6 +278,7 @@ public void homeClick(GButton button, GEvent event) {
 
 public void audioClick(GButton button, GEvent event) {
   if (button == audio && event == GEvent.CLICKED) {
+    // dzwieki w tle
     Config.toogleAudioButton();
   }
 }
@@ -326,7 +327,7 @@ public void checkMarkers() {
   }
 }
 
-PImage create(Capture cam) {
+PImage create(Capture cam) { // kopiowanie pixeli z obrazu kamery przez bug
   PImage res = createImage(cam.width, cam.height, ARGB);
   res.copy(cam, 0, 0, cam.width, cam.height, 0, 0, cam.width, cam.height);
   return res;
@@ -340,7 +341,7 @@ void process(PImage img, Rectangle[] faces) {
   int border_width = img.width / 20;
   int border_height = img.height / 20;
   for (int i = 0; i < faces.length; i++) {
-    int x = faces[i].x - border_width;
+    int x = faces[i].x - border_width; // poszerzanie obszaru poszukiwan
     int y = faces[i].y - border_height;
     int w = faces[i].width + 2 * border_width;
     int h = faces[i].height + 2 * border_height;
@@ -360,10 +361,10 @@ void process(PImage img, Rectangle[] faces) {
     }
 
     PImage part = createImage(img.width, img.height, ARGB);
-    copy(img, part, x, y, w, h);
+    copy(img, part, x, y, w, h); // wycinamy fragment z twarza
     FaceTracker fc = trackers.get(i);
     fc.track(part, Config.useData());
     part = fc.outImg;
-    copy(part, img, x, y, w, h);
+    copy(part, img, x, y, w, h); // przenosimy spowrotem twarz z punktami
   }
 }

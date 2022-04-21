@@ -362,7 +362,7 @@ void process(PImage img, Rectangle[] faces) {
     PImage part = createImage(img.width, img.height, ARGB);
     copy(img, part, x, y, w, h);
     FaceTracker fc = trackers.get(i);
-    fc.track(part, true);
+    fc.track(part, Config.useData());
     part = fc.outImg;
     copy(part, img, x, y, w, h);
   }
